@@ -59,7 +59,7 @@
       background-color: #555 !important;
       cursor: not-allowed !important;
       box-shadow: none !important;
-      pointer-events: none; /* 禁止点击 */
+      pointer-events: none;
     }
     .visible {
       opacity: 1;
@@ -68,6 +68,9 @@
       margin-top: 30px;
       opacity: 0;
       transition: opacity 1s ease-in-out;
+      display: flex;
+      flex-direction: column;
+      align-items: center; /* 使内容居中对齐 */
     }
     #imageContainer.visible {
       opacity: 1;
@@ -90,6 +93,10 @@
       pointer-events: none;
       box-shadow: none;
     }
+    #resetButton {
+      display: none;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
@@ -104,6 +111,7 @@
 <div class="restaurant" id="restaurant"></div>
 <div id="imageContainer">
   <img id="resultImage" src="img/images.jpg" alt="jj" width="300">
+  <button id="resetButton" onclick="resetChoices()">再来3次</button>
 </div>
 <div >
   <h6>这是一个很无聊的网页，我花了10分钟生成出来的</h6>
@@ -161,6 +169,9 @@
       disableButtons();
       document.getElementById('restaurant').textContent = `别点了好兄弟，你今天就吃${lastSelectedRestaurant}吧`;
       showImage();
+      if (clickCount === maxClicks) {
+        showResetButton();
+      }
     }
   }
 
@@ -169,11 +180,50 @@
       element.classList.add('disabled');
       element.disabled = true;
     });
+    document.getElementById('resetButton').disabled = false; // 确保“重新选择”按钮未被禁用
+    document.getElementById('resetButton').classList.remove('disabled'); // 确保“重新选择”按钮没有禁用的样式
+  }
+
+  function enableButtons() {
+    document.querySelectorAll('button, img.choice-img').forEach(element => {
+      element.classList.remove('disabled');
+      element.disabled = false;
+    });
+    clickCount = 0; // 重置点击计数器
+    hideResetButton(); // 隐藏重置按钮
+    resetPageState(); // 重置页面状态
   }
 
   function showImage() {
     const imageContainer = document.getElementById('imageContainer');
     imageContainer.classList.add('visible'); // 显示图片
+  }
+
+  function showResetButton() {
+    const resetButton = document.getElementById('resetButton');
+    resetButton.style.display = 'block'; // 显示重置按钮
+  }
+
+  function hideResetButton() {
+    const resetButton = document.getElementById('resetButton');
+    resetButton.style.display = 'none'; // 隐藏重置按钮
+  }
+
+  function resetPageState() {
+    document.getElementById('restaurant').textContent = ''; // 清空餐厅名称
+    const restaurantElement = document.getElementById('restaurant');
+    restaurantElement.classList.remove('visible');  // 移除动画类
+    const imageContainer = document.getElementById('imageContainer');
+    imageContainer.classList.remove('visible'); // 隐藏图片
+  }
+
+  function resetChoices() {
+    const userInput = prompt("我靠这么贪心，兄弟你犯罪了知道吗，输入'对不起我有罪'再给你三次机会:");
+    if (userInput === "对不起我有罪") {
+      enableButtons();
+    } else {
+      alert("态度不诚恳，不给你机会了");
+    }
   }
 
   updateDateTime();
