@@ -97,6 +97,39 @@
       display: none;
       margin-top: 20px;
     }
+    /* Modal 样式 */
+    #modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+    #modalContent {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #ffffff;
+      width: 80%;
+      max-width: 400px;
+      text-align: center;
+      border-radius: 10px;
+      color: #000000;
+    }
+    #modalContent input {
+      width: 80%;
+      padding: 10px;
+      margin-top: 10px;
+    }
+    #modalContent button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
   </style>
 </head>
 <body>
@@ -113,8 +146,18 @@
   <img id="resultImage" src="img/images.jpg" alt="jj" width="300">
   <button id="resetButton" onclick="resetChoices()">再来3次</button>
 </div>
-<div >
+<div>
   <h6>这是一个很无聊的网页，我花了10分钟生成出来的</h6>
+</div>
+
+<!-- Modal 弹窗 -->
+<div id="modal">
+  <div id="modalContent">
+    <p>我靠这么贪心，兄弟你犯罪了知道吗，输入'对不起我有罪'再给你三次机会:</p>
+    <img src="img/images3.jpg" alt="图片描述" style="margin-top: 20px; width: 100%; border-radius: 10px;">
+    <input type="text" id="userInput" placeholder="输入内容">
+    <button id="submitButton" onclick="checkInput()">提交</button>
+  </div>
 </div>
 
 <script>
@@ -182,6 +225,8 @@
     });
     document.getElementById('resetButton').disabled = false; // 确保“重新选择”按钮未被禁用
     document.getElementById('resetButton').classList.remove('disabled'); // 确保“重新选择”按钮没有禁用的样式
+    document.getElementById('submitButton').disabled = false;
+    document.getElementById('submitButton').classList.remove('disabled');
   }
 
   function enableButtons() {
@@ -218,13 +263,19 @@
   }
 
   function resetChoices() {
-    const userInput = prompt("我靠这么贪心，兄弟你犯罪了知道吗，输入'对不起我有罪'再给你三次机会:");
+    document.getElementById('modal').style.display = 'block';
+  }
+
+  function checkInput() {
+    const userInput = document.getElementById('userInput').value;
     if (userInput === "对不起我有罪") {
       enableButtons();
+      document.getElementById('modal').style.display = 'none';
     } else {
       alert("态度不诚恳，不给你机会了");
     }
   }
+
 
   updateDateTime();
 </script>
